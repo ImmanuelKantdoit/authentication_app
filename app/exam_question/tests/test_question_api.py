@@ -17,14 +17,6 @@ from exam_question.serializers import Exam_QuestionSerializer
 EXAM_QUESTION_URL = reverse('exam_question:exam_question-list')
 
 
-def detail_url(exam_question_id):
-    """Create and return a exam_question detail URL"""
-    return reverse(
-        'exam_question:exam_question-detail',
-        args=[exam_question_id]
-        )
-
-
 def create_question(**params):
     """Create and return a sample question"""
     defaults = {
@@ -83,7 +75,8 @@ class PrivateRecipeAPITests(TestCase):
         """Test get recipe detail"""
         exam_question = create_question()
 
-        url = detail_url(exam_question.id)
+        url = reverse('exam_question:exam_question-list')
+        + f"{exam_question.id}/"
         res = self.client.get(url)
 
         serializer = Exam_QuestionSerializer(exam_question)
@@ -124,7 +117,8 @@ class PrivateRecipeAPITests(TestCase):
             answer=original_answer,
         )
         payload = {'question': 'New question'}
-        url = detail_url(exam_question.id)
+        url = reverse('exam_question:exam_question-list')
+        + f"{exam_question.id}/"
 
         res = self.client.patch(url, payload)
 
@@ -151,7 +145,8 @@ class PrivateRecipeAPITests(TestCase):
             'choices': '["Choice1", "Choice2", "Choice3","Choice4"]',
             'answer': "Choice1",
         }
-        url = detail_url(exam_question.id)
+        url = reverse('exam_question:exam_question-list')
+        + f"{exam_question.id}/"
 
         res = self.client.patch(url, payload)
 
@@ -179,7 +174,8 @@ class PrivateRecipeAPITests(TestCase):
             answer=original_answer,
         )
         payload = {'choices': '["Choice1", "Choice2", "Choice3","Choice4"]'}
-        url = detail_url(exam_question.id)
+        url = reverse('exam_question:exam_question-list')
+        + f"{exam_question.id}/"
 
         res = self.client.patch(url, payload)
 
@@ -207,7 +203,8 @@ class PrivateRecipeAPITests(TestCase):
             answer=original_answer,
         )
         payload = {'choices': '["Choice1", "Choice2"]'}
-        url = detail_url(exam_question.id)
+        url = reverse('exam_question:exam_question-list')
+        + f"{exam_question.id}/"
 
         res = self.client.patch(url, payload)
 
@@ -235,7 +232,8 @@ class PrivateRecipeAPITests(TestCase):
             answer="Test4",
         )
         payload = {'answer': "Test3"}
-        url = detail_url(exam_question.id)
+        url = reverse('exam_question:exam_question-list')
+        + f"{exam_question.id}/"
 
         res = self.client.patch(url, payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -262,7 +260,8 @@ class PrivateRecipeAPITests(TestCase):
             answer="Choice3",
         )
         payload = {'answer': "D"}
-        url = detail_url(exam_question.id)
+        url = reverse('exam_question:exam_question-list')
+        + f"{exam_question.id}/"
 
         # Use a context manager to catch the expected ValueError
         with self.assertRaises(ValueError) as context:
@@ -285,7 +284,8 @@ class PrivateRecipeAPITests(TestCase):
             'choices': '["Choice1", "Choice2", "Choice3", "Choice4"]',
             'answer': "Choice4",
         }
-        url = detail_url(exam_question.id)
+        url = reverse('exam_question:exam_question-list')
+        + f"{exam_question.id}/"
         res = self.client.put(url, payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         exam_question.refresh_from_db()
@@ -305,7 +305,8 @@ class PrivateRecipeAPITests(TestCase):
         """Test deleting an exam_question successful"""
         exam_question = create_question()
 
-        url = detail_url(exam_question.id)
+        url = reverse('exam_question:exam_question-list')
+        + f"{exam_question.id}/"
         res = self.client.delete(url)
 
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
