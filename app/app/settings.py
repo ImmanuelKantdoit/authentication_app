@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'core',
     'user',
-
+    'exam_question',
+    'user_answer',
 ]
 
 MIDDLEWARE = [

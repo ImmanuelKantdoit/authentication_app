@@ -1,9 +1,10 @@
 """
 Tests for models
 """
-
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+
+from core import models
 
 
 def create_user(email='user@example.com', password='testpass123'):
@@ -52,3 +53,35 @@ class ModelTest(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    def test_create_questions(self):
+        """test creating a question is successful"""
+        exam_question = models.Exam_Question.objects.create(
+            question="Test question?",
+            choices=["A1", "A2", "A3", "A4"],
+            answer="A1",
+        )
+
+        self.assertEqual(str(exam_question), exam_question.question)
+
+    def test_create_user_answer(self):
+        """Test creating user's answer to a question"""
+        user = get_user_model().objects.create_user(
+            'test@example.com',
+            'testpass123',
+        )
+        exam_question = models.Exam_Question.objects.create(
+            question="Test question?",
+            choices=["A1", "A2", "A3", "A4"],
+            answer="A1",
+        )
+        user_answer = models.User_Answer.objects.create(
+            user=user,
+            question=exam_question,
+            user_answer="Test Answer",
+            iscorrect=False,
+            issubmitted=True,
+            isbookmarked=True,
+        )
+
+        self.assertEqual(str(user_answer), user_answer.user_answer)

@@ -1,6 +1,7 @@
 """
 Database models
 """
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -45,3 +46,31 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+
+class Exam_Question(models.Model):
+    "Exam Question"
+    question = models.TextField(max_length=255)
+    choices = models.JSONField()
+    answer = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.question
+
+
+class User_Answer(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        )
+    question = models.ForeignKey(
+        Exam_Question,
+        on_delete=models.CASCADE,
+        )
+    user_answer = models.TextField(max_length=255)
+    iscorrect = models.BooleanField()
+    issubmitted = models.BooleanField()
+    isbookmarked = models.BooleanField()
+
+    def __str__(self):
+        return self.user_answer
